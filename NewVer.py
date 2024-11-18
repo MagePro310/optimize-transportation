@@ -69,6 +69,8 @@ def find_loop(check, start_i, start_j):
 
     def backtrack(curr_i, curr_j, direction):
         # Kiểm tra nếu đã quay về điểm bắt đầu và có ít nhất 4 điểm trong chu trình
+        print(f"curr_i: {curr_i}, curr_j: {curr_j}")
+        
         if len(loop) > 3 and (curr_i, curr_j) == loop[0]:
             return True
         
@@ -137,18 +139,28 @@ def modi_method(cost, allocation):
             return allocation
         
         # Tìm ô có giá trị dương lớn nhất trong ma trận check
-        i, j = The_Largest_Positive_Value_Position(check)
-        print(f"Ô có giá trị dương lớn nhất: ({i}, {j})")
+        max_i, max_j = The_Largest_Positive_Value_Position(check)
         
+        for i in range(rows):
+            for j in range(cols):
+                if check[i][j] == allocation[i][j] and check[i][j] == 0:
+                    check[i][j] = -1
+
         # Thay giá trị ô đó trong ma trận check bằng 0
-        check[i][j] = 0
-           
+        check[max_i][max_j] = 0
+        
+        print("Check matrix sau khi đánh dấu:")
+        print(check)
+        
         # Tìm đường vòng lặp (loop)      
-        loop = find_loop(check, i, j)
+        loop = find_loop(check, max_i, max_j)
+        if not loop:
+            print("Không tìm thấy chu trình.")
+            return allocation
+        
+        loop = loop[:-1]  # Loại bỏ điểm cuối cùng vì là điểm bắt đầu
         print("Đường vòng lặp:", loop)
         
-        # Xóa vị trí cuối cùng trong loop
-        loop.pop()
         
         # Xác định các ô + và - trong vòng lặp
         positive_positions = loop[0::2]
@@ -193,3 +205,7 @@ print("Chi phí ban đầu:", total_cost)
 allocation = modi_method(cost_matrix, allocation)
 print("Phân bổ cuối cùng:")
 print(allocation)
+
+# Tính chi phí cuối cùng
+total_cost = calculate_cost(allocation, cost_matrix)
+print("Chi phí cuối cùng:", total_cost)
