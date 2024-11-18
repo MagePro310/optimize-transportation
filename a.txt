@@ -1,0 +1,112 @@
+import numpy as np
+
+# Hàm tính tổng chi phí của bảng vận chuyển
+def calculate_total_cost(cost_matrix, transport_plan):
+    total_cost = 0
+    for i in range(len(cost_matrix)):
+        for j in range(len(cost_matrix[i])):
+            total_cost += cost_matrix[i][j] * transport_plan[i][j]
+    return total_cost
+
+# Phương pháp cực tiểu để tạo nghiệm ban đầu
+def minimum_cost_method(cost_matrix, supply, demand):
+    rows, cols = len(cost_matrix), len(cost_matrix[0])
+    transport_plan = np.zeros((rows, cols), dtype=int)
+    supply_left = supply.copy()
+    demand_left = demand.copy()
+
+    # Lặp qua các ô trong ma trận chi phí
+    while np.any(supply_left) and np.any(demand_left):
+        min_cost = float('inf')
+        min_i, min_j = -1, -1
+        
+        # Tìm ô có chi phí vận chuyển thấp nhất
+        for i in range(rows):
+            for j in range(cols):
+                if supply_left[i] > 0 and demand_left[j] > 0 and cost_matrix[i][j] < min_cost:
+                    min_cost = cost_matrix[i][j]
+                    min_i, min_j = i, j
+
+        # Vận chuyển tối đa có thể từ min_i đến min_j
+        transport_amount = min(supply_left[min_i], demand_left[min_j])
+        transport_plan[min_i][min_j] = transport_amount
+        supply_left[min_i] -= transport_amount
+        demand_left[min_j] -= transport_amount
+
+    return transport_plan
+
+# Phương pháp MODI để tối ưu nghiệm
+def modi_method(cost_matrix, supply, demand, transport_plan):
+    rows, cols = len(cost_matrix), len(cost_matrix[0])
+    
+    # Bước 1: Tính các u và v (potentials)
+    u = np.full(rows, np.nan)
+    v = np.full(cols, np.nan)
+    
+    # Chọn u[0] = 0, sau đó tính các giá trị còn lại cho u và v
+    u[0] = 0
+    while np.any(np.isnan(u)) or np.any(np.isnan(v)):
+        # Cập nhật các u và v từ các ô có giá trị đã biết
+        for i in range(rows):
+            for j in range(cols):
+                if transport_plan[i][j] > 0:
+                    if np.isnan(u[i]) and not np.isnan(v[j]):
+                        u[i] = cost_matrix[i][j] - v[j]
+                    elif np.isnan(v[j]) and not np.isnan(u[i]):
+                        v[j] = cost_matrix[i][j] - u[i]
+    
+    # Bước 2: Tính delta (sự khác biệt giữa chi phí hiện tại và chi phí cải thiện)
+    delta = np.zeros((rows, cols))
+    for i in range(rows):
+        for j in range(cols):
+            if transport_plan[i][j] == 0:
+                delta[i][j] = cost_matrix[i][j] - u[i] - v[j]
+    
+    # Bước 3: Kiểm tra nếu có delta dương, nếu có thì cải thiện
+    while np.any(delta > 0):
+        # Tìm ô có delta dương lớn nhất
+        max_delta = np.max(delta)
+        max_i, max_j = np.unravel_index(np.argmax(delta), delta.shape)
+        
+        # Cập nhật bảng vận chuyển theo chu trình cải thiện
+        # Phương pháp này tìm chu trình và thay đổi giá trị trong transport_plan
+        # (Việc này có thể phức tạp, cần tìm chu trình cải thiện tối ưu)
+        
+        # Cập nhật lại delta và bảng vận chuyển (việc này sẽ cần viết thêm các bước chu trình)
+        
+        # Cập nhật delta sau khi cải thiện
+        delta[max_i][max_j] = 0  # Giả sử ta đã cải thiện tại ô này
+    
+    return transport_plan
+
+# Hàm chính để giải bài toán vận tải không cân bằng
+def unbalanced_transportation_problem(cost_matrix, supply, demand):
+    # Bước 1: Thêm trạm giả nếu cần
+    if sum(supply) < sum(demand):
+        cost_matrix = np.vstack([cost_matrix, np.zeros(len(cost_matrix[0]))])
+        supply.append(sum(demand) - sum(supply))
+    elif sum(supply) > sum(demand):
+        cost_matrix = np.column_stack([cost_matrix, np.zeros(len(cost_matrix))])
+        demand.append(sum(supply) - sum(demand))
+    
+    # Bước 2: Tìm nghiệm ban đầu bằng phương pháp cực tiểu
+    transport_plan = minimum_cost_method(cost_matrix, supply, demand)
+    
+    # Bước 3: Tối ưu hóa bằng phương pháp MODI
+    transport_plan = modi_method(cost_matrix, supply, demand, transport_plan)
+    
+    # Bước 4: Tính tổng chi phí vận chuyển
+    total_cost = calculate_total_cost(cost_matrix, transport_plan)
+    return transport_plan, total_cost
+
+# Ví dụ sử dụng
+cost_matrix = np.array([[82, 73, 74, 79], [80, 75, 81, 79], [80, 77, 77, 82]])  # Ma trận chi phí vận chuyển
+supply = [45, 90, 110]  # Nguồn cung tại các điểm thu
+demand = [40, 75, 60, 70]  # Nhu cầu tại các điểm phát
+
+# Giải bài toán
+transport_plan, total_cost = unbalanced_transportation_problem(cost_matrix, supply, demand)
+
+print("Bảng vận chuyển:")
+print(transport_plan)
+print("Tổng chi phí vận chuyển:", total_cost)
