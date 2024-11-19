@@ -1,6 +1,6 @@
 import numpy as np
 
-def balance_supply_demand(cost, supply, demand):
+def balance_supply_demand(cost, supply, demand) -> tuple:
     """ Cân bằng cung cấp và cầu 
     
     Args:
@@ -32,7 +32,7 @@ def balance_supply_demand(cost, supply, demand):
 
     return cost, supply, demand
 
-def northwest_corner_method(supply, demand):
+def northwest_corner_method(supply, demand) -> np.array:
     """ Phương pháp Northwest Corner
     
     Args:
@@ -59,7 +59,7 @@ def northwest_corner_method(supply, demand):
     
     return allocation
 
-def calculate_cost(allocation, cost):
+def calculate_cost(allocation, cost) -> int:
     """ Tính chi phí
     
     Args:
@@ -77,7 +77,7 @@ def calculate_cost(allocation, cost):
     return total_cost
 
 
-def is_balanced(allocation):
+def is_balanced(allocation) -> bool:
     """ Kiểm tra xem phân bổ đã cân bằng chưa
     
     Args:
@@ -91,7 +91,7 @@ def is_balanced(allocation):
     cols = len(allocation[0])
     return sum(1 for i in range(rows) for j in range(cols) if allocation[i][j] > 0) == rows + cols - 1
 
-def The_Largest_Positive_Value_Position(check):
+def The_Largest_Positive_Value_Position(check) -> tuple:
     """ Tìm vị trí ô có giá trị dương lớn nhất trong ma trận check
     
     Args:
@@ -111,7 +111,7 @@ def The_Largest_Positive_Value_Position(check):
                 pos = (i, j)
     return pos
 
-def find_loop(check, start_i, start_j):
+def find_loop(check, start_i, start_j) -> list:
     """ Tìm chu trình trong ma trận kiểm tra
     
     Args:
@@ -166,7 +166,7 @@ def find_loop(check, start_i, start_j):
         print("Không tìm thấy chu trình.")
         return []
     
-def modi_method(cost, allocation):
+def modi_method(cost, allocation) -> np.array:
     """ Phương pháp MODI
     
     Args:
