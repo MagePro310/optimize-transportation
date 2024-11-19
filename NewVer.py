@@ -3,7 +3,7 @@ import numpy as np
 def balance_supply_demand(cost, supply, demand):
     """ Cân bằng cung cấp và cầu 
     
-    Parameters:
+    Args:
     - cost (list of list): Ma trận chi phí
     - supply (list): Danh sách cung cấp
     - demand (list): Danh sách cầu
@@ -35,7 +35,7 @@ def balance_supply_demand(cost, supply, demand):
 def northwest_corner_method(supply, demand):
     """ Phương pháp Northwest Corner
     
-    Parameters:
+    Args:
     - supply (list): Danh sách cung cấp
     - demand (list): Danh sách cầu
     
@@ -62,7 +62,7 @@ def northwest_corner_method(supply, demand):
 def calculate_cost(allocation, cost):
     """ Tính chi phí
     
-    Parameters:
+    Args:
     - allocation (numpy array): Ma trận phân bổ
     - cost (list of list): Ma trận chi phí
     
@@ -80,7 +80,7 @@ def calculate_cost(allocation, cost):
 def is_balanced(allocation):
     """ Kiểm tra xem phân bổ đã cân bằng chưa
     
-    Parameters:
+    Args:
     - allocation (numpy array): Ma trận phân bổ
     
     Returns:
@@ -94,7 +94,7 @@ def is_balanced(allocation):
 def The_Largest_Positive_Value_Position(check):
     """ Tìm vị trí ô có giá trị dương lớn nhất trong ma trận check
     
-    Parameters:
+    Args:
     - check (numpy array): Ma trận kiểm tra
     
     Returns:
@@ -114,7 +114,7 @@ def The_Largest_Positive_Value_Position(check):
 def find_loop(check, start_i, start_j):
     """ Tìm chu trình trong ma trận kiểm tra
     
-    Parameters:
+    Args:
     - check (numpy array): Ma trận kiểm tra
     - start_i (int): Hàng bắt đầu
     - start_j (int): Cột bắt đầu
@@ -169,7 +169,7 @@ def find_loop(check, start_i, start_j):
 def modi_method(cost, allocation):
     """ Phương pháp MODI
     
-    Parameters:
+    Args:
     - cost (list of list): Ma trận chi phí
     - allocation (numpy array): Ma trận phân bổ
     
