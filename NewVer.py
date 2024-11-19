@@ -1,6 +1,19 @@
 import numpy as np
 
 def balance_supply_demand(cost, supply, demand):
+    """ Cân bằng cung cấp và cầu 
+    
+    Parameters:
+    - cost (list of list): Ma trận chi phí
+    - supply (list): Danh sách cung cấp
+    - demand (list): Danh sách cầu
+    
+    Returns:
+    - cost (list of list): Ma trận chi phí sau khi cân bằng
+    - supply (list): Danh sách cung cấp sau khi cân bằng
+    - demand (list): Danh sách cầu sau khi cân bằng
+    """
+    
     total_supply = sum(supply)
     total_demand = sum(demand)
 
@@ -20,6 +33,16 @@ def balance_supply_demand(cost, supply, demand):
     return cost, supply, demand
 
 def northwest_corner_method(supply, demand):
+    """ Phương pháp Northwest Corner
+    
+    Parameters:
+    - supply (list): Danh sách cung cấp
+    - demand (list): Danh sách cầu
+    
+    Returns:
+    - allocation (numpy array): Ma trận phân bổ
+    """
+    
     rows, cols = len(supply), len(demand)
     allocation = np.zeros((rows, cols))
     
@@ -37,19 +60,46 @@ def northwest_corner_method(supply, demand):
     return allocation
 
 def calculate_cost(allocation, cost):
+    """ Tính chi phí
+    
+    Parameters:
+    - allocation (numpy array): Ma trận phân bổ
+    - cost (list of list): Ma trận chi phí
+    
+    Returns:
+    - total_cost (int): Tổng chi phí
+    """
+    
     total_cost = 0
     for i in range(len(allocation)):
         for j in range(len(allocation[0])):
             total_cost += allocation[i][j] * cost[i][j]
     return total_cost
 
-# tinhs phan bo co bang m + n - 1 hay chua
+
 def is_balanced(allocation):
+    """ Kiểm tra xem phân bổ đã cân bằng chưa
+    
+    Parameters:
+    - allocation (numpy array): Ma trận phân bổ
+    
+    Returns:
+    - balanced (bool): True nếu đã cân bằng, False nếu chưa
+    """
+    
     rows = len(allocation)
     cols = len(allocation[0])
     return sum(1 for i in range(rows) for j in range(cols) if allocation[i][j] > 0) == rows + cols - 1
 
 def The_Largest_Positive_Value_Position(check):
+    """ Tìm vị trí ô có giá trị dương lớn nhất trong ma trận check
+    
+    Parameters:
+    - check (numpy array): Ma trận kiểm tra
+    
+    Returns:
+    - pos (tuple): Vị trí ô có giá trị dương lớn nhất
+    """
     rows = len(check)
     cols = len(check[0])
     max = check[0][0]
@@ -62,6 +112,17 @@ def The_Largest_Positive_Value_Position(check):
     return pos
 
 def find_loop(check, start_i, start_j):
+    """ Tìm chu trình trong ma trận kiểm tra
+    
+    Parameters:
+    - check (numpy array): Ma trận kiểm tra
+    - start_i (int): Hàng bắt đầu
+    - start_j (int): Cột bắt đầu
+    
+    Returns:
+    - loop (list of tuple): Chu trình
+    """
+    
     rows = len(check)
     cols = len(check[0])
     
@@ -69,7 +130,7 @@ def find_loop(check, start_i, start_j):
 
     def backtrack(curr_i, curr_j, direction):
         # Kiểm tra nếu đã quay về điểm bắt đầu và có ít nhất 4 điểm trong chu trình
-        print(f"curr_i: {curr_i}, curr_j: {curr_j}")
+        #print(f"curr_i: {curr_i}, curr_j: {curr_j}")
         
         if len(loop) > 3 and (curr_i, curr_j) == loop[0]:
             return True
@@ -79,22 +140,22 @@ def find_loop(check, start_i, start_j):
             for col in range(cols):
                 if col != curr_j and check[curr_i][col] == 0 and (curr_i, col) not in loop[1:len(loop)-1]:
                     loop.append((curr_i, col))
-                    print(f"Thêm vào loop: {loop}")  # In giá trị loop sau khi thêm
+                    #print(f"Thêm vào loop: {loop}")  # In giá trị loop sau khi thêm
                     if backtrack(curr_i, col, 'col'):
                         return True
                     loop.pop()
-                    print(f"Duyệt ngược và xóa: {loop[-1]}, loop hiện tại: {loop}")  # In giá trị loop sau khi xóa
+                    #print(f"Duyệt ngược và xóa: {loop[-1]}, loop hiện tại: {loop}")  # In giá trị loop sau khi xóa
 
         # Duyệt theo cột
         if direction in {'col', None}:
             for row in range(rows):
                 if row != curr_i and check[row][curr_j] == 0 and (row, curr_j) not in loop[1:len(loop)-1]:
                     loop.append((row, curr_j))
-                    print(f"Thêm vào loop: {loop}")  # In giá trị loop sau khi thêm
+                    #print(f"Thêm vào loop: {loop}")  # In giá trị loop sau khi thêm
                     if backtrack(row, curr_j, 'row'):
                         return True
                     loop.pop()
-                    print(f"Duyệt ngược và xóa: {loop[-1]}, loop hiện tại: {loop}")  # In giá trị loop sau khi xóa
+                    #print(f"Duyệt ngược và xóa: {loop[-1]}, loop hiện tại: {loop}")  # In giá trị loop sau khi xóa
 
         return False
 
@@ -106,6 +167,16 @@ def find_loop(check, start_i, start_j):
         return []
     
 def modi_method(cost, allocation):
+    """ Phương pháp MODI
+    
+    Parameters:
+    - cost (list of list): Ma trận chi phí
+    - allocation (numpy array): Ma trận phân bổ
+    
+    Returns:
+    - allocation (numpy array): Ma trận phân bổ cuối cùng
+    """
+    
     rows = len(allocation)
     cols = len(allocation[0])
     
@@ -148,9 +219,8 @@ def modi_method(cost, allocation):
 
         # Thay giá trị ô đó trong ma trận check bằng 0
         check[max_i][max_j] = 0
-        
-        print("Check matrix sau khi đánh dấu:")
-        print(check)
+        #print("Check matrix sau khi đánh dấu:")
+        #print(check)
         
         # Tìm đường vòng lặp (loop)      
         loop = find_loop(check, max_i, max_j)
