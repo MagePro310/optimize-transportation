@@ -267,8 +267,6 @@ allocation = northwest_corner_method(supply, demand)
 print("Phân bổ ban đầu:")
 print(allocation)
 
-print("Cân bằng cung cấp và cầu:", is_balanced(allocation))
-
 # Tính chi phí
 total_cost = calculate_cost(allocation, cost_matrix)
 print("Chi phí ban đầu:", total_cost)
