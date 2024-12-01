@@ -212,6 +212,8 @@ def modi_method(cost, allocation) -> np.array:
         # Tìm ô có giá trị dương lớn nhất trong ma trận check
         max_i, max_j = The_Largest_Positive_Value_Position(check)
         
+        print(f"Ô bắt đầu chu trình: ({max_i}, {max_j})")
+        
         for i in range(rows):
             for j in range(cols):
                 if check[i][j] == allocation[i][j] and check[i][j] == 0:
